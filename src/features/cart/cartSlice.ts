@@ -15,10 +15,10 @@ const cartSlice = createSlice({
   reducers: {
     addToCart(state, action: PayloadAction<string>) {
       const id = action.payload
-      if (state.items[id]) {
-        state.items[id]++
+      if (state.items[action.payload]) {
+        state.items[action.payload]++
       } else {
-        state.items[id] = 1
+        state.items[action.payload] = 1
       }
     }
   }
@@ -44,4 +44,16 @@ export const getMemoizedNumItems = createSelector(
     }
     return numItems
   }
+)
+
+export const getTotalPrice = createSelector(
+  (state: RootState) => state.cart.items,
+  (state: RootState) => state.products.products,
+  (items, products) => {
+    let total = 0;
+    for (let id in items) {
+      total += products[id].price * items[id]
+    }
+    return total.toFixed(2)
+  },
 )
