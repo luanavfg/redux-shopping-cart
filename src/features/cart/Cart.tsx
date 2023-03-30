@@ -2,7 +2,7 @@ import React from "react";
 import classNames from 'classnames'
 import styles from "./Cart.module.css";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { getTotalPrice, removeFromCart, updateQuantity } from "./cartSlice";
+import { getTotalPrice, removeFromCart, updateQuantity, checkout } from "./cartSlice";
 
 export function Cart() {
   const dispatch = useAppDispatch();
@@ -13,8 +13,13 @@ export function Cart() {
 
   function onQuantityChanged(e: React.FocusEvent<HTMLInputElement>, id: string) {
     const quantity = Number(e.target.value) || 0;
-    dispatch(updateQuantity({id, quantity}))
+    dispatch(updateQuantity({id, quantity}));
   };
+
+  function onCheckout(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    dispatch(checkout())
+  }
 
   const tableClasses = classNames({
     [styles.table]: true,
@@ -59,7 +64,7 @@ export function Cart() {
           </tr>
         </tfoot>
       </table>
-      <form>
+      <form onSubmit={onCheckout}>
         <button className={styles.button} type="submit">
           Checkout
         </button>
